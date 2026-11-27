@@ -1,0 +1,20 @@
+# Secrets and runtime state
+.env
+*.env
+!*.env.example
+data/
+workspace/
+backups/
+*.tar.gz
+*.log
+*.db
+*.sqlite
+*.sock
+
+# OS and editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+__pycache__/
+*.pyc

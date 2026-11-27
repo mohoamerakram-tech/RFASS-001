@@ -1,0 +1,61 @@
+#!/bin/bash
+set -euo pipefail
+
+COMPOSE_DIR="/opt/ai-lab/hermes"
+cd "$COMPOSE_DIR"
+
+case "${1:-help}" in
+  up|start)
+    docker compose up -d
+    ;;
+  down|stop)
+    docker compose down
+    ;;
+  restart)
+    docker compose restart
+    ;;
+  status)
+    docker compose ps
+    ;;
+  logs)
+    shift || true
+    docker compose logs -f "${@:---tail=100}"
+    ;;
+  setup)
+    docker compose run --rm -it hermes setup
+    ;;
+  model)
+    shift || true
+    docker compose run --rm -it hermes model "$@"
+    ;;
+  gateway-setup)
+    docker compose run --rm -it hermes gateway setup
+    ;;
+  cli)
+    shift || true
+    docker compose run --rm -it hermes "$@"
+    ;;
+  shell)
+    docker compose exec -it hermes bash
+    ;;
+  update)
+    docker compose pull && docker compose up -d
+    ;;
+  *)
+    cat <<'EOF'
+Usage: hermes-ctl <command>
+
+  up | start       Start Hermes Agent gateway in background
+  down | stop      Stop and remove Hermes container (keeps data/workspace)
+  restart          Restart Hermes container
+  status           Show container status
+  logs             Follow Hermes gateway logs
+  setup            Run interactive Hermes setup wizard inside container
+  model            Select/switch Venice or custom models interactively
+  gateway-setup    Run interactive Telegram/Discord allowlist setup wizard
+  cli [args...]    Run any `hermes` CLI command inside container
+  shell            Open a bash shell inside the running Hermes container
+  update           Pull latest Hermes image and restart
+EOF
+    ;;
+esac

@@ -1,0 +1,10 @@
+[Unit]
+Description=Run AI Lab self-healing check every 5 minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Unit=ai-lab-healthcheck.service
+
+[Install]
+WantedBy=timers.target

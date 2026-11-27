@@ -1,0 +1,51 @@
+services:
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes-agent
+    restart: unless-stopped
+    command: ["gateway", "run"]
+    environment:
+      - HERMES_UID=988
+      - HERMES_GID=988
+      - TZ=UTC
+    dns:
+      - 1.1.1.1
+      - 9.9.9.9
+    ports:
+      # Localhost-only gateway API / health endpoint (never exposed to LAN)
+      - "127.0.0.1:8642:8642"
+    volumes:
+      - /opt/ai-lab/hermes/data:/opt/data
+      - /opt/ai-lab/hermes/workspace:/workspace
+    working_dir: /workspace
+    networks:
+      - ai-lab-net
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - KILL
+      - SETGID
+      - SETUID
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: "3.0"
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+networks:
+  ai-lab-net:
+    name: ai-lab-net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24

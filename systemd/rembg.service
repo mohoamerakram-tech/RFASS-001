@@ -1,0 +1,15 @@
+[Unit]
+Description=rembg Background Removal HTTP Server
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/rembg-service
+ExecStart=/opt/rembg-service/venv/bin/rembg s --host 127.0.0.1 --port 7000
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+

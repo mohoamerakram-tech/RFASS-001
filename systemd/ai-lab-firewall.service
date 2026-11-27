@@ -1,0 +1,13 @@
+[Unit]
+Description=Isolate AI Lab Docker subnet from home LAN and Tailnet
+After=docker.service ufw.service
+Requires=docker.service
+PartOf=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/ai-lab-net-isolate.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target docker.service

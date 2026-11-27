@@ -1,0 +1,7 @@
+[Unit]
+Description=AI Lab self-healing check (firewall isolation & Hermes Telegram recovery)
+After=docker.service network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/ai-lab-healthcheck.sh

@@ -1,0 +1,12 @@
+# Hermes Agent Configuration Template (Venice.ai + Isolated Container)
+# Copy to /opt/ai-lab/hermes/data/config.yaml
+
+model:
+  default: "glm-5-3-flash-uncensored"
+  provider: "custom"
+  base_url: "https://api.venice.ai/api/v1"
+
+terminal:
+  # Executes inside the isolated Docker container, never on the host OS
+  backend: "local"
+  cwd: "/workspace"
