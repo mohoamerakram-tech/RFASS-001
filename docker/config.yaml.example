@@ -1,5 +1,20 @@
-# Hermes Agent Configuration Template (Venice.ai + Isolated Container)
+# =============================================================================
+# Hermes Agent Configuration Template (Red Team Operator Profile)
 # Copy to /opt/ai-lab/hermes/data/config.yaml
+#
+# RFASS-001 is a red team operator platform. The agent answers offensive
+# security questions at full technical depth, so the model profile matters:
+#
+#   - Default profile targets a refusal-relaxed ("uncensored") model, because
+#     dual-use technique questions are otherwise deflected to a safer topic.
+#   - Switch per task with `hermes-ctl model`: use a tuned model for client
+#     report prose, the uncensored profile for technique reasoning.
+#
+# The operator persona and engagement scope live on disk, not here:
+#   /opt/ai-lab/hermes/workspace/operator-system-prompt.md
+#   /opt/ai-lab/hermes/workspace/engagements/<client>-<id>/roe.md
+# See docs/REDTEAM.md -> "Binding the engagement".
+# =============================================================================
 
 model:
   default: "glm-5-3-flash-uncensored"
@@ -7,6 +22,28 @@ model:
   base_url: "https://api.venice.ai/api/v1"
 
 terminal:
-  # Executes inside the isolated Docker container, never on the host OS
+  # Executes inside the isolated Docker container, never on the host OS.
+  # The container has no host filesystem reach, no Docker socket, and no route
+  # to the LAN or tailnet -- so "local" here means the scratch container.
   backend: "local"
   cwd: "/workspace"
+
+# -----------------------------------------------------------------------------
+# Optional: model profile alternates.
+#
+# Uncomment and adjust if your installed Hermes version exposes a profile or
+# fallback list. Field names vary between agent versions -- verify against
+# `hermes-ctl cli --help` before relying on them. The container configuration
+# does not change between profiles; only the selected model does.
+# -----------------------------------------------------------------------------
+# model:
+#   default: "glm-5-3-flash-uncensored"
+#   provider: "custom"
+#   base_url: "https://api.venice.ai/api/v1"
+#   profiles:
+#     uncensored:
+#       model: "glm-5-3-flash-uncensored"
+#       description: "Refusal-relaxed profile: technique reasoning, PoC drafting, evasion analysis."
+#     tuned:
+#       model: "<tuned-model-id>"
+#       description: "Frontier profile: client-facing report prose and summaries."
